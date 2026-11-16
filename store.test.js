@@ -64,4 +64,18 @@ test('keys lists all stored keys', () => {
   assert.deepStrictEqual(store.keys().sort(), ['a', 'b']);
 });
 
+test('merge combines nested objects into an existing entry', () => {
+  const store = new Store();
+  store.set('cfg', { a: 1, nested: { x: 1 } });
+  store.merge('cfg', { b: 2, nested: { y: 2 } });
+  assert.deepStrictEqual(store.get('cfg'), { a: 1, nested: { x: 1, y: 2 }, b: 2 });
+});
+
+test('getIn reads a nested value by dotted path', () => {
+  const store = new Store();
+  store.set('user', { name: 'ada', addr: { city: 'Lovelace' } });
+  assert.strictEqual(store.getIn('user.name'), 'ada');
+  assert.strictEqual(store.getIn('user.addr.city'), 'Lovelace');
+});
+
 console.log('\nAll tests passed.');
